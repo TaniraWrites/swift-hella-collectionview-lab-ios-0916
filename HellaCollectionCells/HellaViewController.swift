@@ -8,15 +8,57 @@
 
 import UIKit
 
-class HellaViewController: UIViewController {
-
-    override func viewDidLoad() {
-    // Do any additional setup after loading the view, typically from a nib.
+class HellaViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+    
+    @IBOutlet weak var collectionViewCell: UICollectionView!
+    var fib : [Int] = [ ]
+    var numbers = [Int]()
+    
+    func FibonacciNumbers() -> [Int] {
+        var array = [0,1]
+        for i in 0...15 {
+            let fibNumber = array[array.count - 2] + array[array.count - 1]
+            array.append(fibNumber)
+        }
+        return array
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    
+    
+    
+    
+    override func viewDidLoad() {
+        self.fib = FibonacciNumbers()
     }
+    
+    
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 1000
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionCell", for: indexPath)
+        if fib.contains(indexPath.row){
+            cell.backgroundColor = UIColor.purple
+        } else {
+            cell.backgroundColor = UIColor.yellow
+        }
+        return cell
+    }
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "segueDetailView"{
+            if let dest = segue.destination as? HellaDetailViewController  ,
+                let arrayIndex = collectionViewCell.indexPathsForSelectedItems{
+                dest.numberText = String(arrayIndex[0].row)
+            }
+        }
+    }
+    
+        
+        
 }
 
